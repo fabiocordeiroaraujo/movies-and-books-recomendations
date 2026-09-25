@@ -117,14 +117,6 @@ O ranker de duas torres recebe o histórico vetorial do usuário, uma faixa etá
 
 O treinamento neural exige pelo menos 1.000 interações elegíveis e 100 usuários ativos. Os dados são divididos no tempo, evitando que o item-alvo apareça no histórico usado para prevê-lo. Um candidato só é promovido se superar o baseline em pelo menos `0,01` de `NDCG@10` ou `Precision@10`; caso contrário, o ranking híbrido continua ativo.
 
-## Artigos sobre a implementação
-
-A pasta [`artigo`](artigo/) contém a descrição técnica e replicável do recomendador:
-
-1. [Um recomendador começa nos dados](artigo/artigo-1.md): seleção, diagnóstico, transformações e taxonomia;
-2. [Do texto ao espaço vetorial](artigo/artigo-2.md): documento canônico, E5, pgvector e perfil vetorial;
-3. [Do vetor ao ranking híbrido](artigo/artigo-3.md): pesos, dislikes, colaboração, diversidade, explicações e ranker neural.
-
 ## Estrutura
 
 ```text
