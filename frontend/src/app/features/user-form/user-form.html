@@ -1,0 +1,117 @@
+<dialog
+  #dialog
+  class="user-dialog"
+  aria-labelledby="user-form-title"
+  (click)="closeFromBackdrop($event)"
+>
+  <div class="dialog-panel">
+    <header>
+      <div>
+        <span class="eyebrow">Novo perfil</span>
+        <h2 id="user-form-title">Conte um pouco sobre você</h2>
+        <p>Esses dados ficam vinculados ao seu perfil de preferências.</p>
+      </div>
+      <button type="button" class="close-button" aria-label="Fechar" (click)="close()">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+          <path d="m6 6 12 12M18 6 6 18" />
+        </svg>
+      </button>
+    </header>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="form-grid">
+        <label class="full-width">
+          <span>Nome <b aria-hidden="true">*</b></span>
+          <input
+            type="text"
+            formControlName="name"
+            autocomplete="name"
+            maxlength="120"
+            [attr.aria-invalid]="submitted() && form.controls.name.invalid"
+          />
+          @if (submitted() && form.controls.name.hasError('required')) {
+            <small class="field-error">Informe seu nome.</small>
+          }
+        </label>
+
+        <label>
+          <span>Data de nascimento <b aria-hidden="true">*</b></span>
+          <input
+            type="date"
+            formControlName="birthDate"
+            min="1900-01-01"
+            [max]="maxDate"
+            [attr.aria-invalid]="submitted() && form.controls.birthDate.invalid"
+            (input)="updateBirthDate($event)"
+          />
+          @if (submitted() && form.controls.birthDate.invalid) {
+            <small class="field-error">Informe a data de nascimento.</small>
+          }
+        </label>
+
+        <div class="calculated-age" aria-live="polite">
+          <span>Idade</span>
+          <strong>
+            {{ calculatedAge() === null ? 'Calculada pela data' : calculatedAge() + ' anos' }}
+          </strong>
+        </div>
+
+        <label>
+          <span>Gênero</span>
+          <select formControlName="gender">
+            <option value="">Selecione (opcional)</option>
+            <option>Mulher</option>
+            <option>Homem</option>
+            <option>Não binário</option>
+            <option>Outro</option>
+            <option>Prefiro não informar</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Orientação sexual</span>
+          <select formControlName="sexualOrientation">
+            <option value="">Selecione (opcional)</option>
+            <option>Heterossexual</option>
+            <option>Homossexual</option>
+            <option>Bissexual</option>
+            <option>Pansexual</option>
+            <option>Assexual</option>
+            <option>Outra</option>
+            <option>Prefiro não informar</option>
+          </select>
+        </label>
+
+        <label>
+          <span>Nacionalidade</span>
+          <input type="text" formControlName="nationality" autocomplete="country-name" />
+        </label>
+
+        <label>
+          <span>Cidade</span>
+          <input type="text" formControlName="city" autocomplete="address-level2" />
+        </label>
+
+        <label class="full-width">
+          <span>Profissão</span>
+          <input type="text" formControlName="profession" autocomplete="organization-title" />
+        </label>
+      </div>
+
+      @if (error()) {
+        <p class="form-error" role="alert">{{ error() }}</p>
+      }
+
+      <p class="privacy-note">
+        Os campos demográficos são opcionais. A idade é calculada e não é armazenada separadamente.
+      </p>
+
+      <footer>
+        <button type="button" class="secondary-button" (click)="close()">Cancelar</button>
+        <button type="submit" class="primary-button" [disabled]="saving()">
+          {{ saving() ? 'Criando perfil…' : 'Criar perfil' }}
+        </button>
+      </footer>
+    </form>
+  </div>
+</dialog>

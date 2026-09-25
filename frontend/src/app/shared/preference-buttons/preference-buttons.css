@@ -1,0 +1,66 @@
+:host {
+  display: block;
+}
+
+.preference-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.preference-button {
+  min-height: 2.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.55rem 0.85rem;
+  background: color-mix(in srgb, var(--surface-strong) 92%, transparent);
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 750;
+  cursor: pointer;
+  transition: 160ms ease;
+}
+
+.preference-button svg {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.preference-button:hover:not(:disabled) {
+  color: var(--text);
+  border-color: var(--line-bright);
+  transform: translateY(-1px);
+}
+
+.preference-button.like.selected {
+  color: #071913;
+  border-color: var(--mint);
+  background: var(--mint);
+}
+
+.preference-button.dislike.selected {
+  color: #fff;
+  border-color: var(--coral);
+  background: var(--coral);
+}
+
+.preference-button:disabled {
+  opacity: 0.48;
+  cursor: not-allowed;
+}
+
+.saving {
+  color: var(--text-subtle);
+  font-size: 0.75rem;
+}

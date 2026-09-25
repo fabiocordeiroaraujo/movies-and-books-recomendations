@@ -1,0 +1,159 @@
+<main>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="hero-content">
+      <span class="eyebrow">Seu gosto, sua coleção</span>
+      <h1 id="hero-title" class="sr-only">Histórias que ficam com você.</h1>
+      <p>
+        Explore o catálogo e registre o que você gostou — ou o que definitivamente não é para você.
+      </p>
+      <div class="catalog-stats" aria-label="Conteúdo disponível">
+        <span><strong>8.800+</strong> títulos</span>
+        <span><strong>2</strong> universos</span>
+        <span><strong>1</strong> gosto: o seu</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="catalog-section" aria-labelledby="catalog-title">
+    @if (!state.activeUser()) {
+      <div class="profile-callout" role="status">
+        <span aria-hidden="true">✦</span>
+        <p><strong>Você está explorando sem perfil.</strong> Crie ou selecione um perfil no topo para salvar suas preferências.</p>
+      </div>
+    }
+
+    <div class="toolbar">
+      <app-catalog-navigation />
+      <form class="search" role="search" (submit)="$event.preventDefault(); search()">
+        <label for="catalog-search" class="sr-only">Buscar no catálogo</label>
+        <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg>
+        <input
+          id="catalog-search"
+          type="search"
+          [value]="query()"
+          [placeholder]="activeType() === 'MOVIE' ? 'Busque por título…' : 'Busque um livro…'"
+          (input)="updateQuery($event)"
+        />
+        <button type="submit">Buscar</button>
+      </form>
+    </div>
+
+    <div class="section-heading">
+      <div>
+        <span class="eyebrow">Catálogo</span>
+        <h2 id="catalog-title">{{ sectionTitle() }}</h2>
+      </div>
+      <div class="filters">
+        <label for="category-filter">Categoria</label>
+        <div class="category-select">
+          <select
+            id="category-filter"
+            [value]="selectedCategory() ?? ''"
+            (change)="updateCategory($event)"
+          >
+            <option value="">Todas as categorias</option>
+            @for (category of categories(); track category.id) {
+              <option [value]="category.id">{{ category.name }}</option>
+            }
+          </select>
+          <svg aria-hidden="true" viewBox="0 0 20 20">
+            <path d="m5 7.5 5 5 5-5" />
+          </svg>
+        </div>
+        <span class="result-count" aria-live="polite">{{ resultLabel() }}</span>
+      </div>
+    </div>
+
+    @if (catalogError()) {
+      <div class="state-card error-state" role="alert">
+        <span aria-hidden="true">!</span>
+        <h3>O catálogo não respondeu</h3>
+        <p>{{ catalogError() }}</p>
+        <button type="button" (click)="search()">Tentar novamente</button>
+      </div>
+    } @else if (loading()) {
+      <div class="media-grid" aria-label="Carregando catálogo" aria-busy="true">
+        @for (skeleton of skeletons; track skeleton) {
+          <div class="skeleton-card" aria-hidden="true">
+            <div></div><span></span><small></small>
+          </div>
+        }
+      </div>
+      <p class="sr-only" role="status">Carregando catálogo…</p>
+    } @else if (page()?.items?.length === 0) {
+      <div class="state-card empty-state">
+        <span aria-hidden="true">⌕</span>
+        <h3>Nenhum título por aqui</h3>
+        <p>Tente outro termo ou remova os filtros aplicados.</p>
+        <button type="button" (click)="clearFilters()">Limpar filtros</button>
+      </div>
+    } @else {
+      <div class="media-grid" id="catalog-grid">
+        @for (item of page()?.items ?? []; track item.type + ':' + item.id) {
+          <app-media-card
+            [item]="item"
+            [hasUser]="!!state.activeUser()"
+            [preference]="state.preferenceFor(item.type, item.id)"
+            [pending]="state.isPreferencePending(item.type, item.id)"
+            (detailsRequested)="openDetails($event)"
+            (preferenceChanged)="changePreference(item, $event)"
+          />
+        }
+      </div>
+
+      @if ((page()?.totalPages ?? 0) > 1) {
+        <nav class="pagination" aria-label="Paginação do catálogo">
+          <button
+            type="button"
+            [disabled]="pageNumber() === 1"
+            (click)="goToPage(pageNumber() - 1)"
+          >
+            ← Anterior
+          </button>
+          <span>Página <strong>{{ pageNumber() }}</strong> de {{ page()?.totalPages }}</span>
+          <button
+            type="button"
+            [disabled]="pageNumber() === page()?.totalPages"
+            (click)="goToPage(pageNumber() + 1)"
+          >
+            Próxima →
+          </button>
+        </nav>
+      }
+    }
+  </section>
+</main>
+
+<dialog
+  #detailsDialog
+  class="details-dialog"
+  aria-label="Detalhes do item"
+  (click)="closeDetailsFromBackdrop($event)"
+  (close)="resetDetails()"
+>
+  <div class="details-panel">
+    <button type="button" class="dialog-close" aria-label="Fechar detalhes" (click)="closeDetails()">
+      <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" /></svg>
+    </button>
+    @if (detailLoading()) {
+      <div class="detail-loading" role="status">
+        <span class="spinner" aria-hidden="true"></span>
+        Carregando detalhes…
+      </div>
+    } @else if (detailError()) {
+      <div class="detail-loading error-state" role="alert">
+        <span aria-hidden="true">!</span>
+        {{ detailError() }}
+      </div>
+    } @else if (details(); as selected) {
+      <app-media-details
+        [item]="selected"
+        [hasUser]="!!state.activeUser()"
+        [preference]="state.preferenceFor(selected.type, selected.id)"
+        [pending]="state.isPreferencePending(selected.type, selected.id)"
+        (preferenceChanged)="changePreference(selected, $event)"
+      />
+    }
+  </div>
+</dialog>

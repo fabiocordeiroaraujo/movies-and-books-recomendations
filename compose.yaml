@@ -1,0 +1,46 @@
+services:
+  postgres:
+    image: pgvector/pgvector:0.8.1-pg17-bookworm
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-recommendations}
+      POSTGRES_USER: ${POSTGRES_USER:-recommendations}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-recommendations_dev}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d:ro
+      - ./database:/database:ro
+      - ./csv:/imports:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  recommendation-worker:
+    build:
+      context: ./backend/recommendation-worker
+    profiles: ["worker"]
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${POSTGRES_DB:-recommendations}
+      DB_USER: ${RECOMMENDATION_DB_USER:-recommendations}
+      DB_PASSWORD: ${RECOMMENDATION_DB_PASSWORD:-recommendations_dev}
+      MODEL_ARTIFACT_DIR: /artifacts
+      HF_HOME: /models
+    volumes:
+      - recommendation_models:/models
+      - recommendation_artifacts:/artifacts
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: ["python", "-m", "recommendation_worker", "daily"]
+
+volumes:
+  postgres_data:
+  recommendation_models:
+  recommendation_artifacts:

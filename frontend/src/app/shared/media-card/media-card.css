@@ -1,0 +1,177 @@
+:host {
+  display: block;
+  height: 100%;
+  min-width: 0;
+}
+
+.media-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: 0 16px 40px rgb(0 0 0 / 18%);
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.media-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--line-bright);
+  box-shadow: 0 22px 48px rgb(0 0 0 / 32%);
+}
+
+.cover-button {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  overflow: hidden;
+  border: 0;
+  padding: 0;
+  background: var(--surface-strong);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.cover {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition:
+    transform 240ms ease,
+    filter 240ms ease;
+}
+
+.cover-button:hover .cover {
+  transform: scale(1.035);
+  filter: brightness(0.68);
+}
+
+.placeholder {
+  display: grid;
+  place-items: center;
+  color: var(--text-subtle);
+  background:
+    radial-gradient(circle at 20% 10%, rgb(242 185 92 / 14%), transparent 38%),
+    linear-gradient(145deg, #23232a, #111116);
+}
+
+.placeholder svg {
+  width: 3rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.2;
+}
+
+.open-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 1rem;
+  opacity: 0;
+  transform: translate(-50%, 0.5rem);
+  border: 1px solid rgb(255 255 255 / 22%);
+  border-radius: 999px;
+  padding: 0.52rem 0.85rem;
+  background: rgb(8 8 11 / 82%);
+  color: #fff;
+  font-size: 0.74rem;
+  font-weight: 750;
+  white-space: nowrap;
+  transition: 180ms ease;
+}
+
+.cover-button:hover .open-hint,
+.cover-button:focus-visible .open-hint {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.preference-marker {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: var(--mint);
+  color: #062018;
+  font-size: 1rem;
+  font-weight: 900;
+  box-shadow: 0 5px 16px rgb(0 0 0 / 35%);
+}
+
+.preference-marker.disliked {
+  background: var(--coral);
+  color: white;
+}
+
+.card-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.9rem;
+}
+
+.card-body app-preference-buttons {
+  margin-top: auto;
+}
+
+.title-button {
+  width: 100%;
+  overflow: hidden;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.94rem;
+  font-weight: 760;
+  line-height: 1.3;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.title-button:hover {
+  color: var(--gold);
+}
+
+.metadata {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  color: var(--text-subtle);
+  font-size: 0.78rem;
+}
+
+.rating {
+  color: var(--gold);
+  font-weight: 750;
+}
+
+.category {
+  overflow: hidden;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 520px) {
+  .card-body {
+    padding: 0.7rem;
+  }
+}

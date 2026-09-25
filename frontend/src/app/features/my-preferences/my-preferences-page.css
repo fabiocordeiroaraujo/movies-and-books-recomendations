@@ -1,0 +1,340 @@
+:host {
+  display: block;
+}
+
+.preferences-page {
+  min-height: 100dvh;
+  padding: 8.5rem var(--page-pad) 5rem;
+  background:
+    radial-gradient(circle at 8% 6%, rgb(241 179 78 / 9%), transparent 28rem),
+    radial-gradient(circle at 92% 18%, rgb(81 214 169 / 6%), transparent 30rem), var(--background);
+}
+
+.page-intro,
+.preferences-navigation,
+.preferences-section,
+.recommendations-section,
+.state-panel {
+  width: min(100%, var(--content-width));
+  margin-inline: auto;
+}
+
+.page-intro {
+  margin-bottom: 2.25rem;
+}
+.preferences-navigation {
+  margin-bottom: 2.25rem;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 1.4rem;
+}
+.eyebrow {
+  color: var(--gold);
+  font-size: 0.7rem;
+  font-weight: 850;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+.page-intro h1,
+.section-heading h2 {
+  margin: 0.3rem 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+}
+.page-intro h1 {
+  font-size: clamp(2.6rem, 6vw, 5.4rem);
+}
+.page-intro p {
+  max-width: 44rem;
+  margin: 0.65rem 0 0;
+  color: var(--text-muted);
+}
+
+.section-heading,
+.rail-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.preferences-section {
+  margin-top: 2rem;
+}
+.recommendations-section {
+  margin-top: 4rem;
+}
+.section-heading {
+  align-items: end;
+  margin-bottom: 1.2rem;
+}
+.section-heading h2 {
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+}
+.preference-controls {
+  display: flex;
+  gap: 0.75rem;
+}
+.segmented {
+  display: flex;
+  padding: 0.25rem;
+  border: 1px solid var(--line);
+  border-radius: 0.8rem;
+}
+.segmented button,
+.preference-controls select,
+.state-panel button,
+.rail-error button {
+  min-height: 2.5rem;
+  border: 0;
+  border-radius: 0.6rem;
+  padding: 0 0.8rem;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 750;
+  cursor: pointer;
+}
+.segmented button.active {
+  background: var(--surface-strong);
+  color: var(--gold-bright);
+}
+.preference-controls select {
+  border: 1px solid var(--line);
+  padding-right: 2.5rem;
+  background-color: var(--surface);
+}
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.rail {
+  margin-top: 2.25rem;
+}
+.rail-heading {
+  align-items: center;
+  margin-bottom: 0.85rem;
+}
+.rail-heading h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+}
+.rail-heading p {
+  margin: 0.25rem 0 0;
+  color: var(--text-subtle);
+  font-size: 0.72rem;
+}
+.fallback-badge {
+  border: 1px solid rgb(241 179 78 / 25%);
+  border-radius: 999px;
+  padding: 0.4rem 0.6rem;
+  color: var(--gold);
+  font-size: 0.67rem;
+}
+.rail-carousel {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.8rem;
+}
+.recommendation-rail {
+  display: grid;
+  grid-auto-columns: minmax(10.5rem, 13rem);
+  grid-auto-flow: column;
+  justify-content: safe center;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 0.4rem 0 0.6rem;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.recommendation-rail::-webkit-scrollbar {
+  display: none;
+}
+.recommendation-rail:focus-visible {
+  border-radius: 0.75rem;
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+.rail-arrow {
+  width: 2.8rem;
+  height: 2.8rem;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line-bright);
+  border-radius: 999px;
+  background: rgb(24 24 30 / 94%);
+  color: var(--text);
+  cursor: pointer;
+  box-shadow: 0 8px 22px rgb(0 0 0 / 28%);
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+}
+.rail-arrow:hover {
+  transform: scale(1.06);
+  border-color: rgb(241 179 78 / 55%);
+  background: var(--gold);
+  color: #211607;
+}
+.rail-arrow:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+.rail-arrow svg {
+  width: 1.35rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+.recommendation-card {
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  scroll-snap-align: start;
+}
+.recommendation-card app-media-card {
+  flex: 1;
+}
+.recommendation-card app-recommendation-reason {
+  flex: 0 0 auto;
+}
+.inline-empty,
+.rail-error,
+.state-panel {
+  display: grid;
+  place-items: center;
+  min-height: 10rem;
+  border: 1px dashed var(--line-bright);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+.inline-empty span {
+  color: var(--gold);
+  font-size: 2rem;
+}
+.rail-error {
+  min-height: 6rem;
+  color: #ffd9d9;
+}
+.rail-error button,
+.state-panel button {
+  margin-top: 0.5rem;
+  background: var(--gold);
+  color: #211607;
+}
+.state-panel {
+  min-height: 22rem;
+}
+.state-panel h2 {
+  margin: 0.5rem 0 0;
+}
+.state-panel p {
+  max-width: 32rem;
+}
+.state-icon {
+  color: var(--gold);
+  font-size: 2.5rem;
+}
+.spinner {
+  width: 1.4rem;
+  height: 1.4rem;
+  border: 2px solid var(--line-bright);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 800ms linear infinite;
+}
+
+.details-dialog {
+  width: min(58rem, calc(100% - 2rem));
+  max-height: calc(100dvh - 2rem);
+  overflow: auto;
+  border: 1px solid var(--line-bright);
+  border-radius: 1rem;
+  padding: 0;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 24px 90px rgb(0 0 0 / 70%);
+}
+.details-dialog::backdrop {
+  background: rgb(0 0 0 / 72%);
+  backdrop-filter: blur(5px);
+}
+.details-panel {
+  position: relative;
+  min-height: 12rem;
+}
+.dialog-close {
+  position: absolute;
+  z-index: 2;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--line-bright);
+  border-radius: 999px;
+  background: rgb(8 8 11 / 88%);
+  color: var(--text);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.detail-state {
+  min-height: 14rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  color: var(--text-muted);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 1100px) {
+  .card-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+@media (max-width: 820px) {
+  .preferences-page {
+    padding-top: 3rem;
+  }
+  .card-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 620px) {
+  .section-heading {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .preference-controls {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .rail-carousel {
+    gap: 0.45rem;
+  }
+  .rail-arrow {
+    width: 2.45rem;
+    height: 2.45rem;
+  }
+}

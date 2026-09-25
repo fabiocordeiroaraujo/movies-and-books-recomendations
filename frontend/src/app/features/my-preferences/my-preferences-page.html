@@ -1,0 +1,223 @@
+<main class="preferences-page">
+  <section class="page-intro" aria-labelledby="preferences-title">
+    <span class="eyebrow">Seu espaço</span>
+    <h1 id="preferences-title">Minhas Preferências</h1>
+    <p>Reveja suas escolhas e encontre a próxima história.</p>
+  </section>
+
+  <div class="preferences-navigation">
+    <app-catalog-navigation />
+  </div>
+
+  @if (state.loadingUsers()) {
+    <section class="state-panel" aria-busy="true" role="status">
+      <span class="spinner" aria-hidden="true"></span>
+      Carregando perfis…
+    </section>
+  } @else if (state.users().length === 0) {
+    <section class="state-panel" aria-labelledby="no-users-title">
+      <span class="state-icon" aria-hidden="true">◇</span>
+      <h2 id="no-users-title">Crie seu primeiro perfil</h2>
+      <p>Use “Novo perfil” no cabeçalho para começar a registrar seus gostos.</p>
+    </section>
+  } @else if (!state.activeUser()) {
+    <section class="state-panel" role="status">
+      <h2>Selecione um perfil</h2>
+      <p>Escolha quem está usando o Reel & Read no seletor acima.</p>
+    </section>
+  } @else if (loading()) {
+    <section class="state-panel" aria-busy="true" role="status">
+      <span class="spinner" aria-hidden="true"></span>
+      Preparando suas preferências e recomendações…
+    </section>
+  } @else if (summaryError()) {
+    <section class="state-panel error" role="alert">
+      <span class="state-icon" aria-hidden="true">!</span>
+      <h2>Seu perfil não respondeu</h2>
+      <p>{{ summaryError() }}</p>
+      <button type="button" (click)="retry()">Tentar novamente</button>
+    </section>
+  } @else if (summary()) {
+    <section class="preferences-section" aria-labelledby="saved-title">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">Sua coleção</span>
+          <h2 id="saved-title">Suas preferências</h2>
+        </div>
+        <div class="preference-controls">
+          <div class="segmented" aria-label="Tipo de preferência">
+            <button
+              type="button"
+              [class.active]="preferenceTab() === 'LIKE'"
+              [attr.aria-pressed]="preferenceTab() === 'LIKE'"
+              (click)="preferenceTab.set('LIKE')"
+            >
+              Gostei
+            </button>
+            <button
+              type="button"
+              [class.active]="preferenceTab() === 'DISLIKE'"
+              [attr.aria-pressed]="preferenceTab() === 'DISLIKE'"
+              (click)="preferenceTab.set('DISLIKE')"
+            >
+              Não gostei
+            </button>
+          </div>
+          <label>
+            <span class="sr-only">Filtrar preferências por mídia</span>
+            <select [value]="mediaFilter()" (change)="updateMediaFilter($event)">
+              <option value="ALL">Filmes e livros</option>
+              <option value="MOVIE">Filmes</option>
+              <option value="BOOK">Livros</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      @if (visiblePreferences().length === 0) {
+        <div class="inline-empty">
+          <span aria-hidden="true">♡</span>
+          <p>Nenhuma preferência neste filtro. Explore o catálogo e registre sua opinião.</p>
+        </div>
+      } @else {
+        <div class="card-grid">
+          @for (item of visiblePreferences(); track item.type + ':' + item.id) {
+            <app-media-card
+              [item]="item"
+              [hasUser]="true"
+              [preference]="state.preferenceFor(item.type, item.id)"
+              [pending]="state.isPreferencePending(item.type, item.id)"
+              (detailsRequested)="openDetails($event)"
+              (preferenceChanged)="changePreference(item, $event)"
+            />
+          }
+        </div>
+      }
+    </section>
+
+    <section class="recommendations-section" aria-labelledby="recommended-title">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">Feito para você</span>
+          <h2 id="recommended-title">Recomendado para você</h2>
+        </div>
+      </div>
+
+      @for (track of tracks; track track) {
+        <section class="rail" [attr.aria-labelledby]="'rail-' + track">
+          <div class="rail-heading">
+            <div>
+              <h3 [id]="'rail-' + track">{{ railTitle(track) }}</h3>
+              @if (rail(track); as result) {
+                <p>
+                  {{ strategyLabel(result.strategy) }}
+                  @if (result.stale) {
+                    · atualizado agora
+                  } @else {
+                    · {{ result.generatedAt | date: 'short' }}
+                  }
+                </p>
+              }
+            </div>
+            @if (rail(track)?.modelVersion === null) {
+              <span class="fallback-badge">Fallback ativo</span>
+            }
+          </div>
+
+          @if (railErrors()[track]) {
+            <div class="rail-error" role="alert">
+              {{ railErrors()[track] }}
+              <button type="button" (click)="retry()">Tentar novamente</button>
+            </div>
+          } @else if (rail(track); as result) {
+            @if (result.items.length === 0) {
+              <div class="inline-empty">
+                <p>Ainda não há itens suficientes para este trilho.</p>
+              </div>
+            } @else {
+              <div class="rail-carousel">
+                <button
+                  type="button"
+                  class="rail-arrow"
+                  [attr.aria-label]="'Ver recomendações anteriores em ' + railTitle(track)"
+                  [attr.aria-controls]="'rail-items-' + track"
+                  (click)="scrollRecommendations(railViewport, -1)"
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="m15 18-6-6 6-6" />
+                  </svg>
+                </button>
+                <div
+                  #railViewport
+                  class="recommendation-rail"
+                  [id]="'rail-items-' + track"
+                  tabindex="0"
+                  [attr.aria-label]="railTitle(track)"
+                >
+                  @for (item of result.items; track item.type + ':' + item.id) {
+                    <div class="recommendation-card">
+                      <app-media-card
+                        [item]="item"
+                        [hasUser]="true"
+                        [preference]="state.preferenceFor(item.type, item.id)"
+                        [pending]="state.isPreferencePending(item.type, item.id)"
+                        (detailsRequested)="openDetails($event)"
+                        (preferenceChanged)="changePreference(item, $event)"
+                      />
+                      <app-recommendation-reason [reasons]="item.reasons" />
+                    </div>
+                  }
+                </div>
+                <button
+                  type="button"
+                  class="rail-arrow"
+                  [attr.aria-label]="'Ver mais recomendações em ' + railTitle(track)"
+                  [attr.aria-controls]="'rail-items-' + track"
+                  (click)="scrollRecommendations(railViewport, 1)"
+                >
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                </button>
+              </div>
+            }
+          }
+        </section>
+      }
+    </section>
+  }
+</main>
+
+<dialog
+  #detailsDialog
+  class="details-dialog"
+  aria-label="Detalhes do item"
+  (click)="closeDetailsFromBackdrop($event)"
+  (close)="resetDetails()"
+>
+  <div class="details-panel">
+    <button
+      type="button"
+      class="dialog-close"
+      aria-label="Fechar detalhes"
+      (click)="closeDetails()"
+    >
+      ×
+    </button>
+    @if (detailLoading()) {
+      <div class="detail-state" role="status">
+        <span class="spinner" aria-hidden="true"></span> Carregando detalhes…
+      </div>
+    } @else if (detailError()) {
+      <div class="detail-state error" role="alert">{{ detailError() }}</div>
+    } @else if (details(); as selected) {
+      <app-media-details
+        [item]="selected"
+        [hasUser]="true"
+        [preference]="state.preferenceFor(selected.type, selected.id)"
+        [pending]="state.isPreferencePending(selected.type, selected.id)"
+        (preferenceChanged)="changePreference(selected, $event)"
+      />
+    }
+  </div>
+</dialog>

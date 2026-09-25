@@ -1,0 +1,53 @@
+:host {
+  display: block;
+}
+
+.catalog-navigation {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.catalog-navigation a {
+  min-height: 2.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid transparent;
+  border-radius: 0.8rem;
+  padding: 0 1rem;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 780;
+  text-decoration: none;
+}
+
+.catalog-navigation a:hover {
+  color: var(--text);
+}
+
+.catalog-navigation a.active {
+  border-color: var(--line-bright);
+  background: var(--surface-strong);
+  color: var(--text);
+}
+
+.catalog-navigation svg {
+  width: 1.05rem;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+@media (max-width: 620px) {
+  .catalog-navigation {
+    overflow-x: auto;
+  }
+
+  .catalog-navigation a {
+    flex: 0 0 auto;
+  }
+}

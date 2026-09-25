@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-23T15:54:00-03:00",
+  "validation": {
+    "status": "APPROVED",
+    "books": 6810,
+    "movies": 1999,
+    "booksWithoutRating": 43
+  },
+  "files": {
+    "Books.csv": "sha256:ccc3544392de83ec95cf46f72ad08e92199ecd8f7899c759c8b29d602970578a",
+    "TMDB_movies.csv": "sha256:1c7fa00f151b4ba939167e799f8ac4489f075d3269b8cd6716462f1630926533",
+    "Original_Books.csv": "sha256:64a19afd3df7170d153bb5b7e1afdfed4a05e2fe3ac163a168867596f2515e43",
+    "Original_TMDB_movies.csv": "sha256:6c3d31a50304d60244b5e0c9916908f2cbe5d8bfda157b3a43ecb381842e62b2"
+  }
+}

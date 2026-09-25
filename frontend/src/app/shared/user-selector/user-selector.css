@@ -1,0 +1,73 @@
+:host {
+  min-width: min(100%, 25rem);
+}
+
+.user-control {
+  display: grid;
+  gap: 0.35rem;
+}
+
+label {
+  color: var(--text-subtle);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.control-row {
+  display: flex;
+  gap: 0.6rem;
+}
+
+select,
+.new-user {
+  min-height: 2.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.8rem;
+  font: inherit;
+}
+
+select {
+  min-width: 0;
+  flex: 1;
+  padding: 0 2.75rem 0 0.85rem;
+  background-color: var(--surface-strong);
+  color: var(--text);
+}
+
+.new-user {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0 0.9rem;
+  background: var(--gold);
+  color: #211607;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 160ms ease;
+}
+
+.new-user:hover {
+  background: var(--gold-bright);
+  transform: translateY(-1px);
+}
+
+.new-user svg {
+  width: 1.1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 2;
+}
+
+@media (max-width: 520px) {
+  :host {
+    min-width: 100%;
+  }
+
+  .new-user span {
+    display: none;
+  }
+}
