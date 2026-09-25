@@ -4,6 +4,8 @@ O **Reel & Read** é um projeto de sistema de recomendação para livros e filme
 
 O objetivo principal não é apenas sugerir obras semanticamente parecidas. O projeto investiga o ciclo completo de um recomendador: seleção e tratamento das bases, criação de uma taxonomia comum, geração de embeddings, construção do perfil de gosto, filtragem colaborativa, ranking híbrido, diversidade, cold start, explicabilidade, versionamento e avaliação de um ranker neural.
 
+![Tela Minhas Preferências com filmes, livros e recomendações personalizadas](docs/screenshot.png)
+
 ## Visão geral
 
 | Dado | Quantidade |
